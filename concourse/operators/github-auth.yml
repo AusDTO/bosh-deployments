@@ -1,0 +1,15 @@
+---
+
+- type: replace
+  path: /instance_groups/name=web/jobs/name=atc/properties/github_auth?
+  value:
+    client_id: ((github-auth-client-id))
+    client_secret: ((github-auth-client-secret))
+    authorize:
+      - organization: ((github-auth-org))
+        teams: [((github-auth-org-teams))]
+
+- type: remove
+  path: /instance_groups/name=web/jobs/name=atc/properties/basic_auth_username
+- type: remove
+  path: /instance_groups/name=web/jobs/name=atc/properties/basic_auth_password
