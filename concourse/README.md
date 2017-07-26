@@ -11,6 +11,7 @@ The instructions for deploying a local BOSH2 director are [here](../setup-local-
 the provided `concourse.yml` should just work, albeit for a simple deployment.
 
 ```bash
+export BOSH_ENVIRONMENT=<bosh-target>
 bosh deploy -n -d concourse concourse.yml
 ```
 
@@ -66,7 +67,7 @@ bosh deploy -n -d concourse concourse.yml \
 ```
 
 #### network location
-The default deployment manifest deploys to a subnet called `default`.  This is unlikely to be where you want this to run real deployments.  The [networking.yml](operators/networking.yml) file provides the ability adjust the subnet details for the deployment.  Below is an example:
+The default deployment manifest deploys to a subnet called `default`.  This is unlikely to be where you want this to run real deployments.  The [networking.yml](operators/networking.yml) file provides the ability to adjust the subnet details for the deployment.  Below is an example:
 
 ```bash
 bosh deploy -n -d concourse concourse.yml \

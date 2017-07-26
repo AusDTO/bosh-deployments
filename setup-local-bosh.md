@@ -1,11 +1,11 @@
 ### Setting up local environment
 
-1. Assumes Bosh2 is installed with binary named `bosh`.
+1. Assumes BOSH2 cli is installed with binary named `bosh`.
 
 1. Deploy a local BOSH2 environment with VBOX: <https://github.com/cloudfoundry/bosh-deployment>. the `uaa.yml` and `credhub.yml` operator files will add UAA and credhub to the BOSH director.
 
     ```bash
-    bosh2 create-env ./bosh.yml \
+    bosh create-env ./bosh.yml \
     --state ./state.json \
     --vars-store ./creds.yml \
     -o ./virtualbox/cpi.yml \
