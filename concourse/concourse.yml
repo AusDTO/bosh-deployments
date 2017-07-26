@@ -1,0 +1,87 @@
+---
+name: concourse
+
+releases:
+- name: concourse
+  version: "3.3.2"
+  url: https://bosh.io/d/github.com/concourse/concourse?v=3.3.2
+  sha1: 2c876303dc6866afb845e728eab58abae8ff3be2
+- name: garden-runc
+  version: "1.9.0"
+  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.0
+  sha1: 77bfe8bdb2c3daec5b40f5116a6216badabd196c
+
+stemcells:
+- alias: default
+  os: ubuntu-trusty
+  version: "3421.latest"
+
+instance_groups:
+- name: web
+  instances: 1
+  vm_type: default
+  stemcell: default
+  azs: [z1]
+  networks: [{name: default}]
+  networks:
+  - name: default
+  jobs:
+  - name: atc
+    release: concourse
+    properties:
+      external_url: http://localhost/
+
+      basic_auth_username: REPLACE_ME
+      basic_auth_password: REPLACE_ME
+
+      postgresql_database: &atc_db atc
+  - name: tsa
+    release: concourse
+    properties: {}
+
+- name: db
+  instances: 1
+  vm_type: default
+  stemcell: default
+  persistent_disk_type: default
+  azs: [z1]
+  networks: [{name: default}]
+  jobs:
+  - name: postgresql
+    release: concourse
+    properties:
+      databases:
+      - name: *atc_db
+        role: concoursedb
+        password: ((postgresql-concourse-password))
+
+- name: worker
+  instances: 1
+  vm_type: default
+  stemcell: default
+  azs: [z1]
+  networks: [{name: default}]
+  jobs:
+  - name: groundcrew
+    release: concourse
+    properties: {}
+  - name: baggageclaim
+    release: concourse
+    properties: {}
+  - name: garden
+    release: garden-runc
+    properties:
+      garden:
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+
+variables:
+- name: postgresql-concourse-password
+  type: password
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
