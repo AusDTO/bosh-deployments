@@ -91,8 +91,8 @@ The default deployment uses vm-types of `default`.  The [vm-types.yml](operators
 bosh deploy -n -d concourse concourse.yml \
 -o operators/vm-types.yml \
 -v vm-type-web=t2.medium \
--v vm-type-web=t2.medium \
--v vm-type-web=m4.large \
+-v vm-type-db=t2.medium \
+-v vm-type-worker=m4.large \
 ```
 
 #### adjust number of worker nodes
