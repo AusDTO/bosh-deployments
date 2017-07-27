@@ -75,6 +75,16 @@ bosh deploy -n -d concourse concourse.yml \
 -v network-name=ci
 ```
 
+#### set a static ip
+
+The default deployment manifest will allocate an ip using dhcp for the concourse web interface. The [static-ip.yml](operators/static-ip.yml) file provides the ability to specify a static ip for the web interface. Below is an example:
+
+```bash
+bosh deploy -n -d concourse concourse.yml \
+-o operators/static-ip.yml \
+-v static-ip=10.0.1.10
+```
+
 #### external URL for concourse
 The default deployment manifest configures concourse to have an external_url of `localhost`.  The [url.yml](operators/url.yml) file provides the ability adjust the external URL that users will browse to for this service.  Below is an example:
 
