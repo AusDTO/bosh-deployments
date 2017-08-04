@@ -1,0 +1,28 @@
+---
+
+- type: replace
+  path: /instance_groups/name=web/jobs/name=atc/properties?/bind_ip
+  value: 127.0.0.1
+
+- type: replace
+  path: /instance_groups/name=web/jobs/name=atc/properties?/bind_port
+  value: 8080
+
+- type: replace
+  path: /releases/-
+  value:
+    name: instant-https
+    url: https://github.com/govau/instant-https-boshrelease/releases/download/v0.1.0/instant-https-1.tgz
+    sha1: 5430715589f418321c2d6daf187cce1ea4a51fd2
+    version: latest
+
+- type: replace
+  path: /instance_groups/name=web/jobs/-
+  value:
+    name: proxy
+    release: instant-https
+    properties:
+      hostname: ((external-hostname))
+      contact_email: ((cert-contact-email))
+      acme_url: ((acme-api-url))
+      backends: ["127.0.0.1:8080"]

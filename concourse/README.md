@@ -113,3 +113,14 @@ bosh deploy -n -d concourse concourse.yml \
 -o operators/worker-numbers.yml \
 -v workers=4
 ```
+
+#### add HTTPS
+The default deployment exposes the web interface on HTTP.  The [instant-https.yml](operators/instant-https.yml) file adds integration with the [instant-https BOSH release](https://github.com/govau/instant-https-boshrelease).  Below is an example:
+
+```bash
+bosh deploy -n -d concourse concourse.yml \
+-o operators/instant-https.yml \
+-v external-hostname=ci.cloud.gov.au \
+-v cert-contact-email=webmaster@example.com \
+-v acme-api-url=https://acme-staging.api.letsencrypt.org/directory  # Use https://acme-v01.api.letsencrypt.org/directory in production after testing
+```
