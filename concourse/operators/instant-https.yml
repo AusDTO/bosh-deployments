@@ -1,8 +1,10 @@
 ---
 
-- type: replace
-  path: /instance_groups/name=web/jobs/name=atc/properties?/bind_ip
-  value: 127.0.0.1
+# Don't just bind to 127.0.0.1, else tsa cannot connect to it (it will use the bosh link address) and nothing actually works
+# TODO, keep an eye on https://github.com/concourse/concourse/issues/1466 for a workaround, then add this again
+#- type: replace
+#  path: /instance_groups/name=web/jobs/name=atc/properties?/bind_ip
+#  value: 127.0.0.1
 
 - type: replace
   path: /instance_groups/name=web/jobs/name=atc/properties?/bind_port
