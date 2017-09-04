@@ -73,10 +73,6 @@ instance_groups:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
 
-variables:
-- name: postgresql-concourse-password
-  type: password
-
 update:
   canaries: 1
   max_in_flight: 1
