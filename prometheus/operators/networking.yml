@@ -1,0 +1,25 @@
+
+# Exporter jobs
+- type: replace
+  path: /instance_groups/name=alertmanager/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=prometheus/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=database/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=grafana/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=nginx/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=firehose/networks/name=default/name?
+  value: Support
