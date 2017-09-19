@@ -14,7 +14,7 @@ releases:
 stemcells:
 - alias: default
   os: ubuntu-trusty
-  version: "3445.latest"
+  version: latest
 
 instance_groups:
 - name: web
