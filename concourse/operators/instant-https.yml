@@ -14,7 +14,7 @@
   path: /releases/-
   value:
     name: instant-https
-    url: https://github.com/govau/instant-https-boshrelease/releases/download/v0.3.0/instant-https-3.tgz
+    url: https://github.com/govau/instant-https-boshrelease/releases/download/v0.3.0/instant-https-0.3.0.tgz
     sha1: 3c58ab3bcfe6f4f2196df78c15a36a44d7cf8f03
     version: latest
 
