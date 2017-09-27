@@ -28,3 +28,4 @@
       contact_email: ((cert-contact-email))
       acme_url: ((acme-api-url))
       backends: ["127.0.0.1:8080"]
+      websocket: true
