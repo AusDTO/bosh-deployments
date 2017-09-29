@@ -45,11 +45,7 @@ jobs:
       ops_files:
       - github-repo/manifests/operators/monitor-bosh.yml
       - github-repo/manifests/operators/monitor-cf.yml
-      - dta-bosh-deployments/prometheus/operators/deployment-name.yml
-      - dta-bosh-deployments/prometheus/operators/networking.yml
-      - dta-bosh-deployments/prometheus/operators/storage.yml
-      - dta-bosh-deployments/prometheus/operators/vm-extensions.yml
-      - dta-bosh-deployments/prometheus/operators/vm-types.yml
+      - dta-bosh-deployments/prometheus/operators/dta-platform-dev.yml
       vars:
         deployment-name: prometheus-dev
         bosh_url: {{bosh_target}}
@@ -143,10 +139,7 @@ jobs:
       - github-repo/manifests/operators/monitor-bosh.yml
       - github-repo/manifests/operators/monitor-cf.yml
       - dta-bosh-deployments/prometheus/operators/deployment-name.yml
-      - dta-bosh-deployments/prometheus/operators/networking.yml
-      - dta-bosh-deployments/prometheus/operators/storage.yml
-      - dta-bosh-deployments/prometheus/operators/vm-extensions.yml
-      - dta-bosh-deployments/prometheus/operators/vm-types.yml
+      - dta-bosh-deployments/prometheus/operators/dta-platform-dev.yml
       vars:
         deployment-name: prometheus-staging
         bosh_url: {{bosh_target}}

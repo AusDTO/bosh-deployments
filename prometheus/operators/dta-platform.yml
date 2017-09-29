@@ -44,53 +44,53 @@
 
 # add monitoring vm_extension to instances (for security groups)
 - type: replace
-  path: /instance_groups/name=alertmanager/vm_extensions?
+  path: /instance_groups/name=alertmanager/vm_extensions?/-
   value: [monitoring]
 
 - type: replace
-  path: /instance_groups/name=prometheus/vm_extensions?
+  path: /instance_groups/name=prometheus/vm_extensions?/-
   value: [monitoring]
 
 - type: replace
-  path: /instance_groups/name=database/vm_extensions?
+  path: /instance_groups/name=database/vm_extensions?/-
   value: [monitoring]
 
 - type: replace
-  path: /instance_groups/name=grafana/vm_extensions?
+  path: /instance_groups/name=grafana/vm_extensions?/-
   value: [monitoring]
 
 - type: replace
-  path: /instance_groups/name=nginx/vm_extensions?
+  path: /instance_groups/name=nginx/vm_extensions?/-
   value: [monitoring]
 
 - type: replace
-  path: /instance_groups/name=firehose/vm_extensions?
+  path: /instance_groups/name=firehose/vm_extensions?/-
   value: [monitoring]
 
 # deploy small instances
 - type: replace
   path: /instance_groups/name=alertmanager/vm_type?
-  value: t2.small
+  value: small
 
 - type: replace
   path: /instance_groups/name=prometheus/vm_type?
-  value: t2.small
+  value: small
 
 - type: replace
   path: /instance_groups/name=database/vm_type?
-  value: t2.small
+  value: small
 
 - type: replace
   path: /instance_groups/name=grafana/vm_type?
-  value: t2.small
+  value: small
 
 - type: replace
   path: /instance_groups/name=nginx/vm_type?
-  value: t2.small
+  value: small
 
 - type: replace
   path: /instance_groups/name=firehose/vm_type?
-  value: t2.small
+  value: small
 
 # replace single nginx instance with 3 instances in a public subnet
 # - prometheus
@@ -110,6 +110,10 @@
   value:
     nginx: {from: nginx-grafana}
 
+- type: remove
+  path: /instance_groups/name=nginx
+  value:
+
 
 - type: replace
   path: /instance_groups/-
@@ -117,7 +121,7 @@
     name: nginx-prometheus
     azs: [ z1, z2, z3 ]
     instances: 1
-    vm_type: t2.micro
+    vm_type: small
     stemcell: default
     vm_extensions: [monitoring]
     networks:
@@ -153,7 +157,7 @@
     name: nginx-alertmanager
     azs: [ z1, z2, z3 ]
     instances: 1
-    vm_type: t2.micro
+    vm_type: small
     stemcell: default
     vm_extensions: [monitoring]
     networks:
@@ -189,7 +193,7 @@
     name: nginx-grafana
     azs: [ z1, z2, z3 ]
     instances: 1
-    vm_type: t2.micro
+    vm_type: small
     stemcell: default
     vm_extensions: [monitoring]
     networks:
