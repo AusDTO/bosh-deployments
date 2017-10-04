@@ -45,27 +45,27 @@
 # add monitoring vm_extension to instances (for security groups)
 - type: replace
   path: /instance_groups/name=alertmanager/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 - type: replace
   path: /instance_groups/name=prometheus/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 - type: replace
   path: /instance_groups/name=database/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 - type: replace
   path: /instance_groups/name=grafana/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 - type: replace
   path: /instance_groups/name=nginx/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 - type: replace
   path: /instance_groups/name=firehose/vm_extensions?/-
-  value: [monitoring]
+  value: monitoring
 
 # deploy small instances
 - type: replace
