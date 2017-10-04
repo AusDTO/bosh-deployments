@@ -45,6 +45,7 @@ jobs:
       ops_files:
       - github-repo/manifests/operators/monitor-bosh.yml
       - github-repo/manifests/operators/monitor-cf.yml
+      - dta-bosh-deployments/prometheus/operators/deployment-name.yml
       - dta-bosh-deployments/prometheus/operators/dta-platform-dev.yml
       vars:
         deployment-name: prometheus-dev
