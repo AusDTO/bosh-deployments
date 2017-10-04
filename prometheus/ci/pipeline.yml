@@ -269,8 +269,7 @@ resources:
   type: git
   source:
     uri: https://github.com/AusDTO/bosh-deployments.git
-    # branch: master
-    branch: prometheus-monitoring
+    branch: master
 - name: slack
   type: slack-notification
   source:
