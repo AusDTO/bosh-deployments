@@ -194,7 +194,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: ubuntu
+          repository: govau/cga-cf-bosh-cli
       inputs:
       - name: dta-bosh-deployments
       outputs:
@@ -210,7 +210,7 @@ jobs:
       - github-repo/manifests/operators/monitor-bosh.yml
       - github-repo/manifests/operators/monitor-cf.yml
       - dta-bosh-deployments/prometheus/operators/deployment-name.yml
-      - dta-bosh-deployments/prometheus/operators/aws-environment.yml
+      - dta-bosh-deployments/prometheus/operators/dta-platform.yml
       # - github-repo/manifests/operators/alertmanager-slack-receiver.yml
       vars:
         deployment-name: prometheus-prod
