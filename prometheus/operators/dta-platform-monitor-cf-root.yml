@@ -268,6 +268,43 @@
               client_secret: "((uaa_clients_firehose_exporter_secret_staging))"
             metrics:
               environment: staging-digital-gov-au
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: cf_firehose_legacy_platform
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Support
+    jobs:
+      - name: cf_exporter
+        release: prometheus
+        properties:
+          cf_exporter:
+            cf:
+              api_url: https://api.system.platform.digital.gov.au
+              client_id: cf_exporter
+              client_secret: "((uaa_clients_cf_exporter_secret_platform))"
+              deployment_name: cf
+            metrics:
+              environment: platform-digital-gov-au
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.system.platform.digital.gov.au:4443
+              subscription_id: platform-digital-gov-au-root
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.system.platform.digital.gov.au
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret_platform))"
+            metrics:
+              environment: platform-digital-gov-au
 
 - type: replace
   path: /variables/-
@@ -282,10 +319,50 @@
 - type: replace
   path: /variables/-
   value:
+    name: uaa_clients_cf_exporter_secret_b_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_cf_exporter_secret_d_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_cf_exporter_secret_y_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_cf_exporter_secret_z_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
     name: uaa_clients_firehose_exporter_secret_staging
     type: password
 - type: replace
   path: /variables/-
   value:
     name: uaa_clients_firehose_exporter_secret_platform
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_b_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_d_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_y_cld
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_z_cld
     type: password
