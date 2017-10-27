@@ -1,0 +1,291 @@
+---
+# Deploy to the Support Network in AWS
+- type: replace
+  path: /instance_groups/name=alertmanager/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=prometheus/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=database/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=grafana/networks/name=default/name?
+  value: Support
+
+- type: replace
+  path: /instance_groups/name=nginx/networks/name=default/name?
+  value: Support
+
+# Update storage volume sizes for persistent services
+- type: replace
+  path: /instance_groups/name=alertmanager/persistent_disk_type?
+  value: 10GB
+
+- type: replace
+  path: /instance_groups/name=prometheus/persistent_disk_type?
+  value: 10GB
+
+- type: replace
+  path: /instance_groups/name=database/persistent_disk_type?
+  value: 10GB
+
+- type: replace
+  path: /instance_groups/name=grafana/persistent_disk_type?
+  value: 10GB
+
+# add monitoring vm_extension to instances (for security groups)
+- type: replace
+  path: /instance_groups/name=alertmanager/vm_extensions?/-
+  value: monitoring
+
+- type: replace
+  path: /instance_groups/name=prometheus/vm_extensions?/-
+  value: monitoring
+
+- type: replace
+  path: /instance_groups/name=database/vm_extensions?/-
+  value: monitoring
+
+- type: replace
+  path: /instance_groups/name=grafana/vm_extensions?/-
+  value: monitoring
+
+- type: replace
+  path: /instance_groups/name=nginx/vm_extensions?/-
+  value: monitoring
+
+# deploy small instances
+- type: replace
+  path: /instance_groups/name=alertmanager/vm_type?
+  value: small
+
+- type: replace
+  path: /instance_groups/name=prometheus/vm_type?
+  value: small
+
+- type: replace
+  path: /instance_groups/name=database/vm_type?
+  value: small
+
+- type: replace
+  path: /instance_groups/name=grafana/vm_type?
+  value: small
+
+- type: replace
+  path: /instance_groups/name=nginx/vm_type?
+  value: small
+
+# replace single nginx instance with 3 instances in a public subnet
+# - prometheus
+# - alertmanager
+# - grafana
+# nginx instances have HTTPS termination support thanks to https://github.com/govau/instant-https-boshrelease
+- type: replace
+  path: /releases/-
+  value:
+    name: instant-https
+    url: https://github.com/govau/instant-https-boshrelease/releases/download/v0.3.0/instant-https-0.3.0.tgz
+    sha1: 3c58ab3bcfe6f4f2196df78c15a36a44d7cf8f03
+    version: latest
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/consumes?
+  value:
+    nginx: {from: nginx-grafana}
+
+- type: remove
+  path: /instance_groups/name=nginx
+  value:
+
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: nginx-prometheus
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Public
+        default: [dns, gateway, addressable]
+      - name: Internet
+        static_ips: [((prometheus_external_ip))]
+    jobs:
+      - name: nginx
+        release: prometheus
+        provides:
+          nginx: {as: nginx-prometheus}
+        properties:
+          nginx:
+            alertmanager:
+              auth_username: admin
+              auth_password: ((alertmanager_password))
+            prometheus:
+              auth_username: admin
+              auth_password: ((prometheus_password))
+      - name: proxy
+        release: instant-https
+        properties:
+          hostname: ((prometheus_external_hostname))
+          contact_email: weboperations@digital.gov.au
+          acme_url: https://acme-v01.api.letsencrypt.org/directory
+          backends:
+            - localhost:9090
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: nginx-alertmanager
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Public
+        default: [dns, gateway, addressable]
+      - name: Internet
+        static_ips: [((alertmanager_external_ip))]
+    jobs:
+      - name: nginx
+        release: prometheus
+        provides:
+          nginx: {as: nginx-alertmanager}
+        properties:
+          nginx:
+            alertmanager:
+              auth_username: admin
+              auth_password: ((alertmanager_password))
+            prometheus:
+              auth_username: admin
+              auth_password: ((prometheus_password))
+      - name: proxy
+        release: instant-https
+        properties:
+          hostname: ((alertmanager_external_hostname))
+          contact_email: weboperations@digital.gov.au
+          acme_url: https://acme-v01.api.letsencrypt.org/directory
+          backends:
+            - localhost:9093
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: nginx-grafana
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Public
+        default: [dns, gateway, addressable]
+      - name: Internet
+        static_ips: [((grafana_external_ip))]
+    jobs:
+      - name: nginx
+        release: prometheus
+        provides:
+          nginx: {as: nginx-grafana}
+        properties:
+          nginx:
+            alertmanager:
+              auth_username: admin
+              auth_password: ((alertmanager_password))
+            prometheus:
+              auth_username: admin
+              auth_password: ((prometheus_password))
+      - name: proxy
+        release: instant-https
+        properties:
+          hostname: ((grafana_external_hostname))
+          contact_email: weboperations@digital.gov.au
+          acme_url: https://acme-v01.api.letsencrypt.org/directory
+          backends:
+            - localhost:3000
+
+
+# Prometheus Alerts
+- type: replace
+  path: /instance_groups/name=prometheus/jobs/name=cloudfoundry_alerts?/release
+  value: prometheus
+
+- type: replace
+  path: /instance_groups/name=prometheus/jobs/name=prometheus/properties/prometheus/rule_files/-
+  value: /var/vcap/jobs/cloudfoundry_alerts/*.alerts
+
+# Grafana Dashboards
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=cloudfoundry_dashboards?/release
+  value: prometheus
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/prometheus/dashboard_files/-
+  value: /var/vcap/jobs/cloudfoundry_dashboards/*.json
+
+
+# Exporter jobs
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: cf_firehose_legacy_staging
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Support
+    jobs:
+      - name: cf_exporter
+        release: prometheus
+        properties:
+          cf_exporter:
+            cf:
+              api_url: https://api.system.staging.digital.gov.au
+              client_id: cf_exporter
+              client_secret: "((uaa_clients_cf_exporter_secret_staging))"
+              deployment_name: cf
+            metrics:
+              environment: staging-digital-gov-au
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.system.staging.digital.gov.au:4443
+              subscription_id: staging-digital-gov-au-root
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.system.staging.digital.gov.au
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret_staging))"
+            metrics:
+              environment: staging-digital-gov-au
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_cf_exporter_secret_staging
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_cf_exporter_secret_platform
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_staging
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_clients_firehose_exporter_secret_platform
+    type: password
