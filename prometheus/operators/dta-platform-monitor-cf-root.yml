@@ -96,6 +96,117 @@
 - type: replace
   path: /instance_groups/-
   value:
+    name: cf_firehose_b
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Support
+    jobs:
+      - name: cf_exporter
+        release: prometheus
+        properties:
+          cf_exporter:
+            cf:
+              api_url: https://api.system.b.cld.gov.au
+              client_id: cf_exporter
+              client_secret: "((uaa_clients_cf_exporter_secret_b_cld))"
+              deployment_name: cf
+            metrics:
+              environment: b-cld-gov-au
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.system.b.cld.gov.au:4443
+              subscription_id: b-cld-gov-au-root
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.system.b.cld.gov.au
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret_b_cld))"
+            metrics:
+              environment: b-cld-gov-au
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: cf_firehose_d
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Support
+    jobs:
+      - name: cf_exporter
+        release: prometheus
+        properties:
+          cf_exporter:
+            cf:
+              api_url: https://api.system.d.cld.gov.au
+              client_id: cf_exporter
+              client_secret: "((uaa_clients_cf_exporter_secret_d_cld))"
+              deployment_name: cf
+            metrics:
+              environment: d-cld-gov-au
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.system.d.cld.gov.au:4443
+              subscription_id: d-cld-gov-au-root
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.system.d.cld.gov.au
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret_d_cld))"
+            metrics:
+              environment: d-cld-gov-au
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: cf_firehose_y
+    azs: [ z1, z2, z3 ]
+    instances: 1
+    vm_type: small
+    stemcell: default
+    vm_extensions: [monitoring]
+    networks:
+      - name: Support
+    jobs:
+      - name: cf_exporter
+        release: prometheus
+        properties:
+          cf_exporter:
+            cf:
+              api_url: https://api.system.y.cld.gov.au
+              client_id: cf_exporter
+              client_secret: "((uaa_clients_cf_exporter_secret_y_cld))"
+              deployment_name: cf
+            metrics:
+              environment: y-cld-gov-au
+      - name: firehose_exporter
+        release: prometheus
+        properties:
+          firehose_exporter:
+            doppler:
+              url: wss://doppler.system.y.cld.gov.au:4443
+              subscription_id: y-cld-gov-au-root
+              max_retry_count: 300
+            uaa:
+              url: https://uaa.system.y.cld.gov.au
+              client_id: firehose_exporter
+              client_secret: "((uaa_clients_firehose_exporter_secret_y_cld))"
+            metrics:
+              environment: y-cld-gov-au
+- type: replace
+  path: /instance_groups/-
+  value:
     name: cf_firehose_z
     azs: [ z1, z2, z3 ]
     instances: 1
@@ -130,6 +241,7 @@
               client_secret: "((uaa_clients_firehose_exporter_secret_z_cld))"
             metrics:
               environment: z-cld-gov-au
+
 - type: replace
   path: /variables/-
   value:
