@@ -124,3 +124,18 @@ bosh deploy -n -d concourse concourse.yml \
 -v cert-contact-email=webmaster@example.com \
 -v acme-api-url=https://acme-staging.api.letsencrypt.org/directory  # Use https://acme-v01.api.letsencrypt.org/directory in production after testing
 ```
+
+#### Add SHIELD backup agent
+This ops file adds a [shield](https://github.com/starkandwayne/shield) backup agent to your deployment, which will allow you to backup the concourse database. Below is an example:
+
+```bash
+bosh deploy -n -d concourse concourse.yml \
+-o operators/shield.yml \
+-v swift-username=myuser \
+-v swift-username=mypass \
+-v swift-url=https://example.com:443/v2.0 \
+-v swift-backup-container=db-backups \
+-v swift-project-name=myproject
+```
+
+Requires a [SHIELD](https://github.com/starkandwayne/shield-boshrelease) deployment in your BOSH director.

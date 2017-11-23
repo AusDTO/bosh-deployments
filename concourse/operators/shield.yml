@@ -1,0 +1,42 @@
+---
+
+- type: replace
+  path: /instance_groups/name=db/jobs/-
+  value:
+    name: shield-agent
+    release: shield
+    consumes:
+      shield-daemon: {deployment: shield, from: shield-daemon}
+    properties:
+      autoprovision: true
+      targets:
+        concourse:
+          plugin: postgres
+          config:
+            pg_host: 127.0.0.1
+            pg_port: "5432"
+            pg_user: vcap
+            pg_password: local-access-via-vcap-user
+            pg_database:  atc
+            pg_bindir:  /var/vcap/packages/postgres-unknown/bin/
+      jobs:
+        concourse:
+          retention: default
+          schedule: default
+          store: swift
+          target: concourse
+      stores:
+        swift:
+          plugin: swift
+          config:
+            auth_url: ((swift-url))
+            container: ((swift-backup-container))
+            project_name: ((swift-project-name))
+            username: ((swift-username))
+            password: ((swift-password))
+
+- type: replace
+  path: /releases/-
+  value:
+    name: shield
+    version: latest
