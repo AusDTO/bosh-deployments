@@ -31,6 +31,7 @@
           config:
             auth_url: ((swift-url))
             container: ((swift-backup-container))
+            prefix: ((swift-prefix))
             project_name: ((swift-project-name))
             username: ((swift-username))
             password: ((swift-password))
