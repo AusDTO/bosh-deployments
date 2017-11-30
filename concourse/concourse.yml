@@ -10,6 +10,10 @@ releases:
   version: "1.9.0"
   url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.0
   sha1: 77bfe8bdb2c3daec5b40f5116a6216badabd196c
+- name: postgres
+  version: "22"
+  url: https://bosh.io/d/github.com/cloudfoundry/postgres-release?v=22
+  sha1: 86a1333122e9cdd051551c83ec26d36f6e325d6c
 
 stemcells:
 - alias: default
@@ -32,7 +36,12 @@ instance_groups:
       basic_auth_username: REPLACE_ME
       basic_auth_password: REPLACE_ME
 
-      postgresql_database: &atc_db atc
+      postgresql:
+        database: atc
+        role:
+          name: concoursedb
+          password: ((postgresql-concourse-password))
+
   - name: tsa
     release: concourse
     properties: {}
@@ -45,13 +54,16 @@ instance_groups:
   azs: [z1]
   networks: [{name: default}]
   jobs:
-  - name: postgresql
-    release: concourse
+  - name: postgres
+    release: postgres
     properties:
       databases:
-      - name: *atc_db
-        role: concoursedb
-        password: ((postgresql-concourse-password))
+        port: 5432
+        databases:
+        - name: atc
+        roles:
+        - name: concoursedb
+          password: ((postgresql-concourse-password))
 
 - name: worker
   instances: 1
