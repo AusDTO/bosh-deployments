@@ -18,7 +18,7 @@
             pg_user: vcap
             pg_password: local-access-via-vcap-user
             pg_database:  atc
-            pg_bindir:  /var/vcap/packages/postgres-unknown/bin/
+            pg_bindir:  /var/vcap/packages/postgres-9.6.4/bin/
       jobs:
         concourse:
           retention: default
