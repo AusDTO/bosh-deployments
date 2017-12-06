@@ -82,7 +82,7 @@ instance_groups:
     release: concourse
     properties:
       tsa:
-        worker_key: ((worker_key))}
+        worker_key: ((worker_key))
   - name: baggageclaim
     release: concourse
     properties: {}
