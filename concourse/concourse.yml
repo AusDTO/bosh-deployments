@@ -33,6 +33,8 @@ instance_groups:
     properties:
       external_url: http://localhost/
 
+      token_signing_key: ((token_signing_key))
+
       basic_auth_username: REPLACE_ME
       basic_auth_password: REPLACE_ME
 
@@ -44,7 +46,11 @@ instance_groups:
 
   - name: tsa
     release: concourse
-    properties: {}
+    properties:
+      host_key: ((tsa_host_key))
+      token_signing_key: ((token_signing_key))
+      authorized_keys:
+      - ((worker_key.public_key))
 
 - name: db
   instances: 1
@@ -74,7 +80,9 @@ instance_groups:
   jobs:
   - name: groundcrew
     release: concourse
-    properties: {}
+    properties:
+      tsa:
+        worker_key: ((worker_key))}
   - name: baggageclaim
     release: concourse
     properties: {}
@@ -88,6 +96,12 @@ instance_groups:
 variables:
 - name: postgresql-concourse-password
   type: password
+- name: token_signing_key
+  type: rsa
+- name: tsa_host_key
+  type: ssh
+- name: worker_key
+  type: ssh
 
 update:
   canaries: 1
