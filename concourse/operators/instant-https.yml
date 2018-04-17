@@ -14,9 +14,9 @@
   path: /releases/-
   value:
     name: instant-https
-    version: 4.2.0
-    sha1: d9dc0b482763d947bf46450c93adad21d5ac0307
-    url: https://github.com/govau/instant-https-boshrelease/releases/download/v4.2.0/instant-https-4.2.0.tgz
+    version: 4.3.0
+    sha1: 01136e91957de4e5bf4ebc1849aca39b5787e06f
+    url: https://github.com/govau/instant-https-boshrelease/releases/download/v4.3.0/instant-https-4.3.0.tgz
 
 - type: replace
   path: /instance_groups/name=web/jobs/-
