@@ -25,6 +25,7 @@ instance_groups:
   instances: 1
   vm_type: default
   stemcell: default
+  persistent_disk_type: 1G # We want a persistent disk so that don't keep fetching new certs!
   azs: [z1]
   networks: [{name: default}]
   jobs:
