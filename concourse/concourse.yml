@@ -46,6 +46,10 @@ instance_groups:
           name: concoursedb
           password: ((postgresql-concourse-password))
 
+      build_log_retention:
+        default: 1000
+        maximum: 10000
+
   - name: tsa
     release: concourse
     properties:
